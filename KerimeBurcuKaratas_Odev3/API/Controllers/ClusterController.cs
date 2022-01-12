@@ -1,8 +1,7 @@
 ﻿using API.Common;
-using API.Dtos;
-using API.Model;
 using AutoMapper;
 using Data.Uow;
+using Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,7 +28,7 @@ namespace API.Controllers
         //get işlemlerinde gelen data model dto'a map edildi. post işlemlerinde kullanıcıdan gelen dto data model'e map edildi.
         //Mesafeye göre kümeleme işlemlerinin gösterimi için kullanıldı.
         [HttpPost("cluster")]
-        public async Task<IActionResult> Cluster([FromBody] ClusterModel clusterModel)
+        public async Task<IActionResult> Cluster([FromBody] ClusterEntity clusterModel)
         {
             var vehicle = await _unitOfWork.Vehicle.GetById(clusterModel.VehicleId);
             if (vehicle == null)
@@ -47,7 +46,7 @@ namespace API.Controllers
 
            
             //Gelen container listesi ContainerDistance Map edildi. Hesaplanan distance değerlerini çekmek için kullanıldı.
-            var containerWithDistance = _mapper.Map<IEnumerable<ContainerDistanceModel>>(vehicle.Containers);
+            var containerWithDistance = _mapper.Map<IEnumerable<ContainerDistanceEntity>>(vehicle.Containers);
             
             //Her containerin merkeze(0,0) olan uzaklığı hesaplatıldı.
             foreach (var container in containerWithDistance)
@@ -62,13 +61,13 @@ namespace API.Controllers
             //Mesafeye göre sıralandı. Başlangıç noktasına en yakından en uzağa göre sıralandı.
             var newOrderedContainerList = containerWithDistance.OrderBy(x => x.Distance).ToList();  
 
-            var list = new List<IEnumerable<ContainerDto>>();
+            var list = new List<IEnumerable<ContainerEntity>>();
             var clusterCount = newOrderedContainerList.Count / clusterModel.N; //küme sayısına erişmek için.
             for (int i = 0; i < clusterCount; i++)
             {
                 //Örneğin N=3 => i=0, skip=0, take=3 || i=1, skip=3, take=3  || i=2, skip=6, take=3.... 
                 var x = newOrderedContainerList.Skip(i * clusterModel.N).Take(clusterModel.N);
-                var xmap = _mapper.Map<IEnumerable<ContainerDto>>(x);
+                var xmap = _mapper.Map<IEnumerable<ContainerEntity>>(x);
                 list.Add(xmap);
             }
             //Response tipleri data model yerine dto olarak gerekli dönüşümler yapıldı.

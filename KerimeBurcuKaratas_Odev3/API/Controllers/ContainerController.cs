@@ -1,7 +1,8 @@
-﻿using API.Dtos;
+﻿
 using AutoMapper;
 using Data.DataModel;
 using Data.Uow;
+using Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,14 +32,14 @@ namespace API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _unitOfWork.Container.GetAll();
-            var map = _mapper.Map<IEnumerable<ContainerDto>>(result);
+            var map = _mapper.Map<IEnumerable<ContainerEntity>>(result);
             //Response tipleri data model yerine dto olarak gerekli dönüşümler yapıldı.
             return Ok(map);
         }
 
         //Yeni container eklemek için kullanıldı.
         [HttpPost("add")]
-        public async Task<IActionResult> Add([FromBody] ContainerDto containerdto)
+        public async Task<IActionResult> Add([FromBody] ContainerEntity containerdto)
         {
             var container = _mapper.Map<Container>(containerdto);
             await _unitOfWork.Container.Add(container);
@@ -48,7 +49,7 @@ namespace API.Controllers
 
         //Container bilgisi güncellemesi için kullanıldı.
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] ContainerDto containerdto)
+        public async Task<IActionResult> Update([FromBody] ContainerEntity containerdto)
         {
             var entity = await _unitOfWork.Container.GetById(containerdto.Id);
             if (entity.VehicleId != containerdto.VehicleId)

@@ -1,4 +1,6 @@
 using API.Common;
+using AutoMapper;
+using Core;
 using Data.Context;
 using Data.Uow;
 using Microsoft.AspNetCore.Builder;
@@ -36,8 +38,12 @@ namespace API
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
-            //AutoMapper kullanýmý için eklendi.
-            services.AddAutoMapper(typeof(MappingProfile));
+            // mapper
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
+            services.AddSingleton(mapperConfig.CreateMapper());
 
             services.AddControllers();
 

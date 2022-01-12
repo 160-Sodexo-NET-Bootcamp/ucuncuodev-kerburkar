@@ -1,5 +1,6 @@
-﻿using API.Model;
+﻿
 using Data.DataModel;
+using Entity;
 using GeoCoordinatePortable;
 using System;
 
@@ -10,7 +11,7 @@ namespace API.Common
     {
         //Container uzaklıkları GeoCoordinate kütüphanesine kullarak hesaplatıldı.
        
-        public static double CalculateDistance(ContainerDistanceModel container)
+        public static double CalculateDistance(ContainerDistanceEntity container)
         {
             var startLat = 0;
             var startLong = 0;

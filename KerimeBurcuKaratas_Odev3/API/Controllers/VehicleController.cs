@@ -1,8 +1,9 @@
-﻿using API.Dtos;
-using API.Model;
+﻿
+
 using AutoMapper;
 using Data.DataModel;
 using Data.Uow;
+using Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,7 +34,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _unitOfWork.Vehicle.GetAll();
-            var map = _mapper.Map<IEnumerable<VehicleDto>>(result);
+            var map = _mapper.Map<IEnumerable<VehicleEntity>>(result);
             //Response tipleri data model yerine dto olarak gerekli dönüşümler yapıldı.
             return Ok(map);
 
@@ -49,7 +50,7 @@ namespace API.Controllers
 
         //Yeni vehicle eklemek için kullanıldı.
         [HttpPost("add")]
-        public async Task<IActionResult> Add([FromBody] VehicleDto vehicledto)
+        public async Task<IActionResult> Add([FromBody] VehicleEntity vehicledto)
         {
             var vehicle = _mapper.Map<Vehicle>(vehicledto);
             await _unitOfWork.Vehicle.Add(vehicle);
@@ -60,7 +61,7 @@ namespace API.Controllers
         //Vehicle bilgisi güncellemesi için kullanıldı.
 
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] VehicleDto vehicledto)
+        public async Task<IActionResult> Update([FromBody] VehicleEntity vehicledto)
         {
             var vehicle = _mapper.Map<Vehicle>(vehicledto);
             await _unitOfWork.Vehicle.Update(vehicle);
@@ -79,7 +80,7 @@ namespace API.Controllers
 
         //Kümeleme işlemlerinin gösterimi için kullanıldı.
         [HttpPost("cluster")]
-        public async Task<IActionResult> Cluster([FromBody] ClusterModel clusterModel)
+        public async Task<IActionResult> Cluster([FromBody] ClusterEntity clusterModel)
         {
             var vehicle = await _unitOfWork.Vehicle.GetById(clusterModel.VehicleId);
             if (vehicle == null)
@@ -95,13 +96,13 @@ namespace API.Controllers
                 return BadRequest("Containers cannot be clustered evenly. Containers count: "+vehicle.Containers.Count);
             }
 
-            var list = new List<IEnumerable<ContainerDto>>(); 
+            var list = new List<IEnumerable<ContainerEntity>>(); 
             var clusterCount = vehicle.Containers.Count/clusterModel.N; //küme sayısına erişmek için.
             for (int i = 0; i < clusterCount; i++)
             {
                 //Örneğin N=3 => i=0, skip=0, take=3 || i=1, skip=3, take=3  || i=2, skip=6, take=3.... 
                 var x = vehicle.Containers.ToList().Skip(i * clusterModel.N).Take(clusterModel.N);
-                var xmap = _mapper.Map<IEnumerable<ContainerDto>>(x);
+                var xmap = _mapper.Map<IEnumerable<ContainerEntity>>(x);
                 list.Add(xmap);
             }          
             return Ok(list);

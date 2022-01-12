@@ -2,6 +2,7 @@
 using API.Model;
 using AutoMapper;
 using Data.DataModel;
+using Entity;
 
 namespace API.Common
 {
@@ -10,10 +11,10 @@ namespace API.Common
     {
         public MappingProfile()
         {
-            CreateMap<Vehicle, VehicleDto>().ReverseMap();
-            CreateMap<Container, ContainerDto>().ReverseMap();
+            CreateMap<Vehicle, VehicleEntity>().ReverseMap();
+            CreateMap<Container, ContainerEntity>().ReverseMap();
             CreateMap<Container, ContainerDistanceModel>().ReverseMap();
-            CreateMap<ContainerDto, ContainerDistanceModel>().ReverseMap();
+            CreateMap<ContainerEntity, ContainerDistanceModel>().ReverseMap();
         }
     }
 }

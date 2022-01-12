@@ -25,13 +25,14 @@ namespace API.Controllers
             _mapper = mapper;
 
         }
-
+        //get işlemlerinde gelen data model dto'a map edildi. post işlemlerinde kullanıcıdan gelen dto data model'e map edildi.
         //Tüm container listesini göstermek için kullanıldı.
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _unitOfWork.Container.GetAll();
             var map = _mapper.Map<IEnumerable<ContainerDto>>(result);
+            //Response tipleri data model yerine dto olarak gerekli dönüşümler yapıldı.
             return Ok(map);
         }
 

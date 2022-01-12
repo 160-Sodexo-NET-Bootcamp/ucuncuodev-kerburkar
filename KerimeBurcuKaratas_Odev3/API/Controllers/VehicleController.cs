@@ -27,11 +27,14 @@ namespace API.Controllers
         }
 
         //Tüm vehicle listesini göstermek için kullanıldı.
+        //get işlemlerinde gelen data model dto'a map edildi. post işlemlerinde kullanıcıdan gelen dto data model'e map edildi.
+        
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _unitOfWork.Vehicle.GetAll();
             var map = _mapper.Map<IEnumerable<VehicleDto>>(result);
+            //Response tipleri data model yerine dto olarak gerekli dönüşümler yapıldı.
             return Ok(map);
 
         }
@@ -41,7 +44,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetById([FromRoute] long id)
         {
             var result = await _unitOfWork.Vehicle.GetById(id);
-            return Ok(result);
+            return Ok(result); 
         }
 
         //Yeni vehicle eklemek için kullanıldı.
@@ -55,6 +58,7 @@ namespace API.Controllers
         }
 
         //Vehicle bilgisi güncellemesi için kullanıldı.
+
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromBody] VehicleDto vehicledto)
         {

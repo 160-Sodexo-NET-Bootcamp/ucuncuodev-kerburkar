@@ -26,7 +26,7 @@ namespace API.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
+        //get işlemlerinde gelen data model dto'a map edildi. post işlemlerinde kullanıcıdan gelen dto data model'e map edildi.
         //Mesafeye göre kümeleme işlemlerinin gösterimi için kullanıldı.
         [HttpPost("cluster")]
         public async Task<IActionResult> Cluster([FromBody] ClusterModel clusterModel)
@@ -71,6 +71,7 @@ namespace API.Controllers
                 var xmap = _mapper.Map<IEnumerable<ContainerDto>>(x);
                 list.Add(xmap);
             }
+            //Response tipleri data model yerine dto olarak gerekli dönüşümler yapıldı.
             return Ok(list);
         }
 

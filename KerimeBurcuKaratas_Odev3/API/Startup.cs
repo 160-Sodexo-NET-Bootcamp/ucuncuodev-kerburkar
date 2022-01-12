@@ -1,6 +1,7 @@
 using API.Common;
 using AutoMapper;
 using Core;
+using Core.MiddleWares;
 using Data.Context;
 using Data.Uow;
 using Microsoft.AspNetCore.Builder;
@@ -76,6 +77,10 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
+
+
+            // middleware
+            app.UseMiddleware<ForbiddenMiddleware>();
 
             app.UseRouting();
 
